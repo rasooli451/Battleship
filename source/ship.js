@@ -13,6 +13,7 @@ class ship{
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.parts = addParts(x, y, length, direction);
     }
 
 
@@ -29,5 +30,10 @@ class ship{
 
 }
 
+
+function addParts(x, y, length, direction){
+    let result = [];
+    
+}
 
 export default ship;
