@@ -108,7 +108,7 @@ class gameboard{
     }
 
     recieveAttack(x, y){
-        
+        //idea : go through ships, each ship object should have an array property with all of its coordinates, then pass the new coordinates and see if it exists in the ship parts array, if it does, then it's a hit, otherwise, register the hit as 'missed'. it's important to stringify the ship parts array and the array with the new coordinates, then use indexof method on the stringified version of ship parts array and pass in the stringified array with the new coordinates, if it doesn't return -1, it's a hit. if you don't stringify, this method won't work.
     }
 }
 
