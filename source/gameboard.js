@@ -19,6 +19,9 @@ class gameboard{
         [0,0,0,0,0,0,0,0,0,0]];
         this.ships = this.shipFactory();
         this.horizontal = false;
+        this.hits = [];
+        this.missed = [];
+        this.allsunk = false;
     }
 
 
@@ -109,6 +112,23 @@ class gameboard{
 
     recieveAttack(x, y){
         //idea : go through ships, each ship object should have an array property with all of its coordinates, then pass the new coordinates and see if it exists in the ship parts array, if it does, then it's a hit, otherwise, register the hit as 'missed'. it's important to stringify the ship parts array and the array with the new coordinates, then use indexof method on the stringified version of ship parts array and pass in the stringified array with the new coordinates, if it doesn't return -1, it's a hit. if you don't stringify, this method won't work.
+        let coord = JSON.stringify([x,y]);
+        for (let i = 0; i < this.ships.length; i ++){
+            let coords = JSON.stringify(this.ships[i].parts);
+            if (coords.indexOf(coord) != -1){
+                this.ships[i].hit();
+                if (this.ships[i].isSunk()){
+                    this.ships.splice(i,1);
+                    if (this.ships.length === 0){
+                        this.allsunk = true;
+                    }
+                }
+                this.hits.push([x,y]);
+                return true;
+            }
+        }
+        this.missed.push([x,y]);
+        return false;
     }
 }
 
