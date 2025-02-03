@@ -9,7 +9,7 @@
 class ship{
     constructor(length, x, y, direction){
         this.length = length;
-        this.HP = 2 * this.length;
+        this.HP = this.length;
         this.x = x;
         this.y = y;
         this.direction = direction;
@@ -18,7 +18,7 @@ class ship{
 
 
     hit(){
-        this.HP -= 2;
+        this.HP -= 1;
     }
 
     isSunk(){
@@ -33,7 +33,19 @@ class ship{
 
 function addParts(x, y, length, direction){
     let result = [];
-    
+    for (let i = 0; i < length; i ++){
+        let coordinates = [];
+        if (direction === "hor"){
+            coordinates.push(x);
+            coordinates.push(y + i);
+        }
+        else{
+            coordinates.push(x + i);
+            coordinates.push(y);
+        }
+        result.push(coordinates);
+    }
+    return result;
 }
 
 export default ship;
