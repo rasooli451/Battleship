@@ -18,6 +18,7 @@ class gameboard{
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0]];
         this.ships = this.shipFactory();
+        this.Sortships();
         this.horizontal = false;
         this.hits = [];
         this.missed = [];
@@ -32,12 +33,14 @@ class gameboard{
         let x = 0;
         let y = 0;
         let newship = null;
+        let maxsize = 4;
+        let shipsizes = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
         for (let i = 0; i < 10; i++){
-            size = getRandomNumber(1, 4);
+            size = shipsizes[i];
             x = getRandomNumber(0, 9);
             y = getRandomNumber(0, 9);
             while (!this.checkavailability(size, x, y, "hor") && !this.checkavailability(size, x, y, "ver")){
-                size = getRandomNumber(1, 4);
+                size = shipsizes[i];
                 x = getRandomNumber(0, 9);
                 y = getRandomNumber(0, 9);
             }
@@ -130,7 +133,13 @@ class gameboard{
         this.missed.push([x,y]);
         return false;
     }
+
+    Sortships(){
+        this.ships = this.ships.sort((a,b)=> b.length - a.length);
+    }
 }
+
+
 
 
 
