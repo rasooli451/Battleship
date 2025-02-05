@@ -170,4 +170,4 @@ function pairExists(x,y,hits){
 
 
 
-export default enemyAi;
+export  {enemyAi, pairExists};
