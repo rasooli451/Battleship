@@ -1,7 +1,7 @@
 
 
 import gameboard from "./gameboard";
-//24 6:11
+
 
 
 
@@ -10,7 +10,9 @@ import gameboard from "./gameboard";
 
 export {populateBoard, updateOverview, clear};
 
+import UserCoordinate from "./index";
 
+import { pairExists } from "./enemyAi";
 
 
 
@@ -26,10 +28,12 @@ function populateBoard(Gameboard, div){
             cell.classList.add("cell");
             cell.setAttribute("coord", i + "," + j);
             div.appendChild(cell);
-            cell.addEventListener("click", ()=>{
-                Clicked(cell, Gameboard);
-            })
+            if (div.parentElement.classList.contains("computer")){
+                cell.addEventListener("click", ()=>{
+                    Clicked(cell, Gameboard);
+                })
         }
+    }
     }
 }
 
@@ -37,12 +41,10 @@ function populateBoard(Gameboard, div){
 
 function updateOverview(Gameboard, div){
     let ships = Gameboard.ships;
-    let ex = document.createElement("div");
-
     if (div.children.length > 0){
         for (let i = 0; i < ships.length; i ++){
             if (ships[i].isSunk()){
-                ex.children[i].classList.add("destroyed");
+                div.children[i].classList.add("destroyed");
             }
         }
     }
@@ -65,7 +67,12 @@ function updateOverview(Gameboard, div){
 
 
 function Clicked(cell, Gameboard){
-    
+    let coordstring = cell.getAttribute("coord");
+    let x = Number(coordstring.charAt(0));
+    let y = Number(coordstring.charAt(2));
+    if (!pairExists(x,y,Gameboard.hits) && !pairExists(x,y,Gameboard.missed)){
+        UserCoordinate(x, y, Gameboard, cell);
+    }
 }
 
 
