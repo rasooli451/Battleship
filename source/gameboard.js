@@ -23,6 +23,7 @@ class gameboard{
         this.hits = [];
         this.missed = [];
         this.allsunk = false;
+        this.shipsleft = 10;
     }
 
 
@@ -33,7 +34,6 @@ class gameboard{
         let x = 0;
         let y = 0;
         let newship = null;
-        let maxsize = 4;
         let shipsizes = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
         for (let i = 0; i < 10; i++){
             size = shipsizes[i];
@@ -121,8 +121,8 @@ class gameboard{
             if (coords.indexOf(coord) != -1){
                 this.ships[i].hit();
                 if (this.ships[i].isSunk()){
-                    this.ships.splice(i,1);
-                    if (this.ships.length === 0){
+                    this.shipsleft -= 1;
+                    if (this.shipsleft === 0){
                         this.allsunk = true;
                     }
                 }
