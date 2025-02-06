@@ -181,3 +181,9 @@ button:hover:disabled{
     top: 40%;
     left: 0;
 }
+
+
+.covered{
+    border-color: unset;
+    border-color: rgba(0, 0, 0, 0.445);
+}
