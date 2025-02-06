@@ -120,18 +120,20 @@ class gameboard{
             let coords = JSON.stringify(this.ships[i].parts);
             if (coords.indexOf(coord) != -1){
                 this.ships[i].hit();
+                let sunk = false;
                 if (this.ships[i].isSunk()){
                     this.shipsleft -= 1;
+                    sunk = true;
                     if (this.shipsleft === 0){
                         this.allsunk = true;
                     }
                 }
                 this.hits.push([x,y]);
-                return true;
+                return [true, sunk];
             }
         }
         this.missed.push([x,y]);
-        return false;
+        return [false,false];
     }
 
     Sortships(){
