@@ -70,6 +70,7 @@ startbtn.addEventListener("click", ()=>{
 restartbtn.addEventListener("click", ()=>{
     usergame = new gameboard();
     aigame = new gameboard();
+    enemy = new enemyAi();
     clear(playerboard);
     clear(aiboard);
     clear(playershipsoverview);
@@ -90,7 +91,7 @@ function initialize(){
 
 
 
-function UserCoordinate(x,y, gameboard, cell){
+async function UserCoordinate(x,y, gameboard, cell){
     if (UserTurn && gamestarted){
         let result = gameboard.recieveAttack(x, y);
         if (lastplayercell != null){
@@ -98,7 +99,7 @@ function UserCoordinate(x,y, gameboard, cell){
         }
         lastplayercell = cell;
         lastplayercell.classList.add("current");
-        if (result){
+        if (result[0]){
             cell.classList.add("hit");
             updateOverview(gameboard, aishipsoverview);
             if (gameboard.allsunk){
@@ -109,6 +110,7 @@ function UserCoordinate(x,y, gameboard, cell){
         else{
             cell.classList.add("miss");
             guidance.innerHTML = "Opponent's turn";
+            await pause();
             enemyturn();
         }
     }
@@ -116,7 +118,7 @@ function UserCoordinate(x,y, gameboard, cell){
 
 
 
-function enemyturn(){
+async function enemyturn(){
     UserTurn = false;
     while (!UserTurn){
         let enemycoord = enemy.play();
@@ -127,15 +129,19 @@ function enemyturn(){
         lastcomputercell = cell;
         lastcomputercell.classList.add("current");
         let result = usergame.recieveAttack(enemycoord[0], enemycoord[1]);
-        if (result){
+        if (result[0]){
             enemy.registerWin();
             cell.classList.add("hit");
             updateOverview(usergame, playershipsoverview);
-            if (playerboard.allsunk){
+            if (result[1]){
+                enemy.registerMoveOn();
+            }
+            if (usergame.allsunk){
                 gamestarted = false;
                 guidance.innerHTML = "You lost!";
                 UserTurn = true;
             }
+            await pause();
         }
         else{
             enemy.registerMiss();
@@ -145,6 +151,14 @@ function enemyturn(){
         }
     }
 }
+
+
+function pause() {
+    return new Promise(resolve => setTimeout(() => {
+      resolve();
+    }, 1500)); 
+  }
+
 
 
 
