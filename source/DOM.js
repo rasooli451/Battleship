@@ -29,6 +29,7 @@ function populateBoard(Gameboard, div){
             cell.setAttribute("coord", i + "," + j);
             div.appendChild(cell);
             if (div.parentElement.classList.contains("computer")){
+                cell.classList.add("covered");
                 cell.addEventListener("click", ()=>{
                     Clicked(cell, Gameboard);
                 })
