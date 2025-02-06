@@ -16,6 +16,9 @@ class enemyAi{
         this.triedvertop = false;
         this.triedverbot = false;
         this.alreadytried = [];
+        this.trend = "unknown";
+        this.winindex = 1;
+        this.useWinindex = false;
     }
 
 
@@ -23,18 +26,18 @@ class enemyAi{
         let x = 0;
         let y = 0;
         if (!this.lastwaswin){
-            x = getRandomNumber(0, 8);
-            y = getRandomNumber(0, 8);
+            x = getRandomNumber(0 ,9);
+            y = getRandomNumber(0, 9);
             let previoushits = JSON.stringify(this.hits);
             let newcoord = JSON.stringify([x,y]);
             while(previoushits.indexOf(newcoord) != -1){
-                x = getRandomNumber(0, 8);
-                y = getRandomNumber(0, 8);
+                x = getRandomNumber(0, 9);
+                y = getRandomNumber(0, 9);
                 newcoord = JSON.stringify([x, y]);
             }
         }
         else{
-            let lastwin = this.wins[this.wins.length - 1];
+            let lastwin = this.wins[this.wins.length - this.useWinindex ? this.winindex : 1];
             let coordfound = false;
             if (!this.triedhorleft){
                 if (lastwin[1] > 0){
@@ -43,6 +46,9 @@ class enemyAi{
                     if (!pairExists(x, y, this.hits)){
                         coordfound = true;
                         this.alreadytried.push("horleft");
+                    }
+                    else{
+                        this.triedhorleft = true;
                     }
                 }
                 else{
@@ -57,6 +63,9 @@ class enemyAi{
                         coordfound = true;
                         this.alreadytried.push("horright");
                     }
+                    else{
+                        this.triedhorright = true;
+                    }
                 }
                 else{
                     this.triedhorright = true;
@@ -69,6 +78,9 @@ class enemyAi{
                     if (!pairExists(x,y, this.hits)){
                         coordfound = true;
                         this.alreadytried.push("vertop");
+                    }
+                    else{
+                        this.triedvertop = true;
                     }
                 }
                 else{
@@ -83,6 +95,9 @@ class enemyAi{
                         coordfound = true;
                         this.alreadytried.push("verbot");
                     }
+                    else{
+                        this.triedverbot = true;
+                    }
                 }
                 else{
                     this.triedverbot = true;
@@ -92,6 +107,8 @@ class enemyAi{
             //checkhor first, if possible, left and right, else do ver top and bottom, only then switch lastwaswin to false
         }
         this.hits.push([x,y]);
+        console.log([x,y]);
+        console.log(this.hits);
         return [x, y];
     }
 
@@ -101,17 +118,22 @@ class enemyAi{
         }
         else{
             //set a trend that ai should follow for next attack, using the alreadytried array
+            this.winindex ++;
             if (this.alreadytried[this.alreadytried.length - 1] === "horleft"){
                 this.triedhorleft = false;
+                this.trend = "hor";
             }
             else if(this.alreadytried[this.alreadytried.length - 1] === "horright"){
                 this.triedhorright = false;
+                this.trend = "hor";
             }
             else if(this.alreadytried[this.alreadytried.length - 1] === "vertop"){
                 this.triedvertop = false;
+                this.trend = "ver";
             }
             else{
                 this.triedverbot = false;
+                this.trend = "ver";
             }
         }
         this.wins.push(this.hits[this.hits.length - 1]);
@@ -119,16 +141,8 @@ class enemyAi{
 
     registerMiss(){
         if (this.lastwaswin){
-            if (this.triedhorleft && this.triedhorright && this.triedvertop && this.triedverbot){
-                this.lastwaswin = false;
-                this.alreadytried = [];
-                this.triedhorleft = false;
-                this.triedhorright = false;
-                this.triedvertop = false;
-                this.triedverbot = false;
-            }
-            else{
-                let lastmove = this.alreadytried[this.alreadytried.length - 1];
+            let lastmove = this.alreadytried[this.alreadytried.length - 1];
+            if (this.trend === "unknown"){
                 if (lastmove === "horleft"){
                     this.triedhorleft = true;
                 }
@@ -142,10 +156,49 @@ class enemyAi{
                     this.triedverbot = true;
                 }
             }
+            else{
+                this.useWinindex = true;
+                if (this.trend === "hor"){
+                    if (lastmove === "horleft"){
+                        this.triedhorright = false;
+                        this.triedhorleft = true;
+                    }
+                    else{
+                        this.triedhorright = false;
+                        this.triedhorleft = true;
+                    }
+                    this.triedvertop = true;
+                    this.triedverbot = true;
+                }
+                else{
+                    if (lastmove === "vertop"){
+                        this.triedverbot = false;
+                        this.triedvertop = true;
+                    }
+                    else{
+                        this.triedvertop = false;
+                        this.triedverbot = true;
+                    }
+                    this.triedhorleft = true;
+                    this.triedhorright = true;
+                }
+            }
         }
         else{
 
         }
+    }
+
+    registerMoveOn(){
+        this.lastwaswin = false;
+        this.alreadytried = [];
+        this.triedhorleft = false;
+        this.triedhorright = false;
+        this.triedvertop = false;
+        this.triedverbot = false;
+        this.useWinindex = false;
+        this.winindex = 1;
+        this.trend = "unknown";
     }
 }
 
@@ -166,6 +219,7 @@ function pairExists(x,y,hits){
     }
     return false;
 }
+
 
 
 
