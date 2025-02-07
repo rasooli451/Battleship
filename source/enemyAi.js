@@ -37,7 +37,7 @@ class enemyAi{
             }
         }
         else{
-            let lastwin = this.wins[this.wins.length - this.useWinindex ? this.winindex : 1];
+            let lastwin = this.wins[this.wins.length - (this.useWinindex ? this.winindex : 1)];
             let coordfound = false;
             if (!this.triedhorleft){
                 if (lastwin[1] > 0){
