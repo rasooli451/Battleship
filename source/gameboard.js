@@ -129,7 +129,7 @@ class gameboard{
                     }
                 }
                 this.hits.push([x,y]);
-                return [true, sunk];
+                return [true, sunk, this.ships[i]];
             }
         }
         this.missed.push([x,y]);
