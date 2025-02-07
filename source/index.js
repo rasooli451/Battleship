@@ -12,6 +12,11 @@ import "./style.css";
 
 import { populateBoard, updateOverview, clear , x, y} from "./DOM";
 
+import cannonShot from "./cannonShot.mp3";
+
+
+import shipHit from "./shipHit.mp3";
+
 export default UserCoordinate;
 
 
@@ -35,6 +40,7 @@ let enemy = null;
 let gamestarted = false;
 let lastplayercell = null;
 let lastcomputercell = null;
+
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -76,6 +82,7 @@ restartbtn.addEventListener("click", ()=>{
     clear(playershipsoverview);
     clear(aishipsoverview);
     initialize();
+    guidance.innerHTML = "Press Start to Play..";
     randomize.removeAttribute("disabled");
     startbtn.removeAttribute("disabled");
     gamestarted = false;
@@ -92,7 +99,10 @@ function initialize(){
 
 
 async function UserCoordinate(x,y, gameboard, cell){
+    let cannonShotsound = new Audio(cannonShot);
+    let shipHitsound = new Audio(shipHit);
     if (UserTurn && gamestarted){
+        UserTurn = false;
         let result = gameboard.recieveAttack(x, y);
         if (lastplayercell != null){
             lastplayercell.classList.remove("current");
@@ -100,14 +110,21 @@ async function UserCoordinate(x,y, gameboard, cell){
         lastplayercell = cell;
         lastplayercell.classList.add("current");
         if (result[0]){
+            UserTurn = true;
             cell.classList.add("hit");
+            shipHitsound.play();
             updateOverview(gameboard, aishipsoverview);
+            if (result[1]){
+                let ship = result[2];
+                Highlightsunkships(ship, aiboard);
+            }
             if (gameboard.allsunk){
                 gamestarted = false;
                 guidance.innerHTML = "You Won!!";
             }
         }
         else{
+            cannonShotsound.play();
             cell.classList.add("miss");
             guidance.innerHTML = "Opponent's turn";
             await pause();
@@ -120,9 +137,10 @@ async function UserCoordinate(x,y, gameboard, cell){
 
 async function enemyturn(){
     UserTurn = false;
+    let cannonShotsound = new Audio(cannonShot);
     while (!UserTurn){
         let enemycoord = enemy.play();
-        let cell = getCell(enemycoord[0], enemycoord[1]);
+        let cell = getCell(enemycoord[0], enemycoord[1], playerboard);
         if (lastcomputercell != null){
             lastcomputercell.classList.remove("current");
         }
@@ -130,11 +148,15 @@ async function enemyturn(){
         lastcomputercell.classList.add("current");
         let result = usergame.recieveAttack(enemycoord[0], enemycoord[1]);
         if (result[0]){
+            let shipHitsound = new Audio(shipHit);
             enemy.registerWin();
             cell.classList.add("hit");
+            shipHitsound.play();
             updateOverview(usergame, playershipsoverview);
             if (result[1]){
                 enemy.registerMoveOn();
+                let ship = result[2];
+                Highlightsunkships(ship, playerboard);
             }
             if (usergame.allsunk){
                 gamestarted = false;
@@ -144,6 +166,7 @@ async function enemyturn(){
             await pause();
         }
         else{
+            cannonShotsound.play();
             enemy.registerMiss();
             cell.classList.add("miss");
             guidance.innerHTML = "Your turn";
@@ -156,18 +179,25 @@ async function enemyturn(){
 function pause() {
     return new Promise(resolve => setTimeout(() => {
       resolve();
-    }, 1500)); 
+    }, 1700)); 
   }
 
 
 
 
-function getCell(x, y){
+function getCell(x, y, board){
     let index = x * 10 + y;
-    return playerboard.children[index];
+    return board.children[index];
 }
 
 
+function Highlightsunkships(ship, board){
+    let shipParts = ship.parts;
+    for (let i = 0; i < shipParts.length; i++){
+        let cell = getCell(shipParts[i][0], shipParts[i][1], board);
+        cell.classList.add("sunk");
+    }
+}
 
 
 
