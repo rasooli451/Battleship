@@ -103,7 +103,7 @@ body{
 
 button{
     padding: 15px 30px;
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.445);;
     color: #fff;
     cursor: pointer;
     border: none;
@@ -125,7 +125,6 @@ button:hover:disabled{
 
 
 .hit{
-    border-color: red;
     position: relative;
 }
 
@@ -156,7 +155,6 @@ button:hover:disabled{
 .miss:before{
     position: absolute;
     content: "o";
-    color: rgb(255, 0, 0);
     width: 100%;
     text-align: center;
     top: 25%;
@@ -186,4 +184,10 @@ button:hover:disabled{
 .covered{
     border-color: unset;
     border-color: rgba(0, 0, 0, 0.445);
+}
+
+
+
+.sunk{
+    border-color: red;
 }
