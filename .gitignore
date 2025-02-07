@@ -1,6 +1,5 @@
 node_modules
 dist
-package-lock.json
 /test/js
 /test/browsertest/js
 /test/fixtures/temp-*
