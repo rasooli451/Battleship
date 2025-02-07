@@ -107,8 +107,6 @@ class enemyAi{
             //checkhor first, if possible, left and right, else do ver top and bottom, only then switch lastwaswin to false
         }
         this.hits.push([x,y]);
-        console.log([x,y]);
-        console.log(this.hits);
         return [x, y];
     }
 
