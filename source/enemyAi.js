@@ -38,6 +38,10 @@ class enemyAi{
         }
         else{
             let lastwin = this.wins[this.wins.length - (this.useWinindex ? this.winindex : 1)];
+            if (this.useWinindex){
+                this.useWinindex = false;
+                this.winindex = 1;
+            }
             let coordfound = false;
             if (!this.triedhorleft){
                 if (lastwin[1] > 0){
@@ -135,6 +139,13 @@ class enemyAi{
             }
         }
         this.wins.push(this.hits[this.hits.length - 1]);
+        
+        if (this.alreadytried[this.alreadytried.length - 1] === "vertop" && this.wins[this.wins.length - 1][0] === 0){
+            this.registerMiss();
+        }
+        else if(this.alreadytried[this.alreadytried.length - 1] === "horleft" && this.wins[this.wins.length - 1][1] === 0){
+            this.registerMiss();
+        }
     }
 
     registerMiss(){
