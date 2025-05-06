@@ -16,6 +16,10 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url("./battleshipBG.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 
@@ -23,6 +27,7 @@ body{
     display: flex;
     align-items: center;
     flex-direction: column;
+    background: transparent;
     gap: 1rem;
 }
 
@@ -68,13 +73,13 @@ body{
 .shipPart{
     width: min(30px, 2vw);
     height: min(30px, 2vw);
-    border: 2px solid rgba(0, 0, 0, 0.678);
+    border: 2px solid rgb(0, 0, 0);
 }
 
 .cell{
     width: min(50px, 4vw);
     height: min(50px, 4vw);
-    border: 2px solid rgba(0, 0, 0, 0.445);
+    border: 2px solid rgb(0, 0, 0);
 }
 
 
@@ -184,7 +189,7 @@ button:hover:disabled{
 
 .covered{
     border-color: unset;
-    border-color: rgba(0, 0, 0, 0.445);
+    border-color: rgb(0, 0, 0);
 }
 
 
@@ -198,6 +203,7 @@ button:hover:disabled{
 @media (max-width : 1030px) {
 
     body{
+        background-position: right;
     }
     .player, .computer{
         flex-direction: column;
@@ -222,6 +228,7 @@ button:hover:disabled{
 @media (max-width : 615px) {
     body{
         background-repeat: no-repeat;
+        background-position: left;
     }
 
 
